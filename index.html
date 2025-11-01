@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epidemiology Research Simulator: RCT Study</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Stage 1 of 8</div>
+        </div>
+
+        <!-- Stage 1: Introduction -->
+        <div class="stage" id="stage1">
+            <div class="stage-content">
+                <h1 class="game-title">Epidemiology Research Simulator</h1>
+                <h2 class="subtitle">Randomized Controlled Trial Study</h2>
+                
+                <div class="info-card">
+                    <h3>Study Background: Endometriosis and Treatment Options</h3>
+                    <div class="info-section">
+                        <h4>What is Endometriosis?</h4>
+                        <p>Endometriosis is a chronic condition where tissue similar to the uterine lining grows outside the uterus.</p>
+                    </div>
+                    <div class="info-section">
+                        <h4>Symptoms</h4>
+                        <p>Causes pelvic pain, dysmenorrhea (painful periods), and reduced quality of life.</p>
+                    </div>
+                    <div class="info-section">
+                        <h4>Research Question</h4>
+                        <p class="research-question">Does oral contraceptive use combined with a low-sugar diet reduce endometriosis-related pain compared to placebo?</p>
+                    </div>
+                </div>
+
+                <button class="btn btn--primary btn--lg" onclick="nextStage()">Start Study</button>
+            </div>
+        </div>
+
+        <!-- Stage 2: Hypothesis Selection -->
+        <div class="stage hidden" id="stage2">
+            <div class="stage-content">
+                <h2>Stage 2: Formulate Your Hypotheses</h2>
+                <p class="instruction">Select the correct null and alternative hypotheses for this study.</p>
+
+                <div class="hypothesis-section">
+                    <h3>Null Hypothesis (H₀)</h3>
+                    <div class="options" id="nullOptions"></div>
+                    <div class="feedback" id="nullFeedback"></div>
+                </div>
+
+                <div class="hypothesis-section">
+                    <h3>Alternative Hypothesis (H₁)</h3>
+                    <div class="options" id="altOptions"></div>
+                    <div class="feedback" id="altFeedback"></div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn2" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 3: Study Population -->
+        <div class="stage hidden" id="stage3">
+            <div class="stage-content">
+                <h2>Stage 3: Recruit Study Population</h2>
+                <div class="info-card clue-card">
+                    <p><strong>Clinical Research Protocol:</strong> When conducting clinical trials, researchers always begin by carefully selecting the right study population to ensure the trial results are reliable and generalizable. Your task is to distinguish between participants who should be included (Eligible) and those who should be excluded (Ineligible) from the study.</p>
+                </div>
+                <p class="instruction">Drag each card to the appropriate column, or click a card and then click the destination zone. Large cards with clear visual feedback will guide you.</p>
+
+                <div class="matching-container">
+                    <div class="criteria-pool" id="criteriaPool"></div>
+                    
+                    <div class="sorting-columns">
+                        <div class="sort-column eligible-column">
+                            <h3 class="column-title">✓ Eligible Criteria</h3>
+                            <div class="drop-zone" id="eligibleZone"></div>
+                        </div>
+                        <div class="sort-column ineligible-column">
+                            <h3 class="column-title">✗ Ineligible Criteria</h3>
+                            <div class="drop-zone" id="ineligibleZone"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-display" id="populationScore">Correct: 0/10</div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn3" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 4: Randomization -->
+        <div class="stage hidden" id="stage4">
+            <div class="stage-content">
+                <h2>Stage 4: Randomize Participants</h2>
+                <p class="instruction">Randomization eliminates selection bias and ensures group comparability.</p>
+
+                <div class="info-card">
+                    <h3>Block Randomization</h3>
+                    <p>We will use block randomization to ensure balanced groups throughout the study.</p>
+                    <div class="groups-info">
+                        <div class="group-card treatment-group">
+                            <h4>Treatment Group</h4>
+                            <p>Oral contraceptive (30 μg ethinyl estradiol + 150 μg levonorgestrel)</p>
+                            <p>+ Low-sugar diet counseling</p>
+                            <p class="group-size" id="treatmentCount">0 participants</p>
+                        </div>
+                        <div class="group-card control-group">
+                            <h4>Control Group</h4>
+                            <p>Placebo pill</p>
+                            <p>+ Standard dietary counseling</p>
+                            <p class="group-size" id="controlCount">0 participants</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="randomization-viz" id="randomizationViz"></div>
+
+                <button class="btn btn--primary btn--lg" id="randomizeBtn" onclick="randomizeParticipants()">Randomize 200 Participants</button>
+
+                <!-- Randomization Question Modal -->
+                <div class="modal-overlay hidden" id="randomizationModal">
+                    <div class="modal-content">
+                        <h3>Understanding Randomization</h3>
+                        <p class="modal-question">What is the primary purpose of randomization in a randomized controlled trial?</p>
+                        <div class="modal-options" id="randomizationOptions">
+                            <div class="modal-option" onclick="answerRandomizationQuestion(0)">To eliminate selection bias and create comparable groups</div>
+                            <div class="modal-option" onclick="answerRandomizationQuestion(1)">To ensure all participants receive treatment</div>
+                            <div class="modal-option" onclick="answerRandomizationQuestion(2)">To increase study costs</div>
+                            <div class="modal-option" onclick="answerRandomizationQuestion(3)">To maximize blinding</div>
+                        </div>
+                        <div class="feedback" id="randomizationFeedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn4" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 5: Blinding Sequence -->
+        <div class="stage hidden" id="stage5">
+            <div class="stage-content">
+                <h2>Stage 5: Establish Proper Blinding</h2>
+                <div class="info-card clue-card">
+                    <p><strong>Research Protocol Best Practices:</strong> In high-quality randomized controlled trials, the blinding process follows a precise chronological sequence to ensure unbiased results and maintain study integrity. Each step builds upon the previous one to create a robust double-blind design. Arrange the steps below in the correct order by dragging them into the numbered positions (1-7).</p>
+                </div>
+
+                <div class="info-card">
+                    <p><strong>Double-Blind Study:</strong> Neither participants nor researchers know who receives treatment vs placebo.</p>
+                </div>
+
+                <div class="blinding-layout">
+                    <div class="blinding-source-section">
+                        <h3>Blinding Steps (Drag to Positions Below)</h3>
+                        <div class="blinding-source-area" id="blindingSource"></div>
+                    </div>
+
+                    <div class="blinding-target-section">
+                        <h3>Correct Chronological Order</h3>
+                        <div class="blinding-target-area" id="blindingTarget"></div>
+                    </div>
+                </div>
+
+                <div class="blinding-controls">
+                    <button class="btn btn--primary" id="checkSequenceBtn" onclick="checkBlindingSequence()" disabled>Check Sequence</button>
+                    <button class="btn btn--secondary" onclick="resetBlindingSequence()">Reset All</button>
+                </div>
+                <div class="feedback" id="sequenceFeedback"></div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn5" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 6: Data Collection -->
+        <div class="stage hidden" id="stage6">
+            <div class="stage-content">
+                <h2>Stage 6: Design Data Collection Instruments</h2>
+                <p class="instruction">Identify which questions are appropriate for data collection. Good questions avoid bias and don't censor data.</p>
+
+                <div class="questions-container" id="questionsContainer"></div>
+
+                <div class="score-display" id="questionScore">Correct: 0/10</div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn6" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 7: Statistical Calculations -->
+        <div class="stage hidden" id="stage7">
+            <div class="stage-content">
+                <h2>Stage 7: Analyze Study Results</h2>
+                <p class="instruction">Calculate key epidemiological measures using the study results.</p>
+
+                <div class="results-table-container">
+                    <h3>Study Results (6-month follow-up)</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Persistent Symptoms</th>
+                                <th>Symptom Improvement</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Treatment Group</strong></td>
+                                <td>30</td>
+                                <td>70</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Control Group</strong></td>
+                                <td>65</td>
+                                <td>35</td>
+                                <td>100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="calculations-container" id="calculationsContainer"></div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                    <button class="btn btn--primary" id="nextBtn7" onclick="nextStage()" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 8: Hypothesis Decision -->
+        <div class="stage hidden" id="stage8">
+            <div class="stage-content">
+                <h2>Stage 8: Make Your Statistical Decision</h2>
+                
+                <div class="info-card">
+                    <h3>Statistical Test Results</h3>
+                    <p class="p-value">p-value = 0.001</p>
+                    <p>Significance level (α) = 0.05</p>
+                </div>
+
+                <p class="instruction">Given the p-value, what is your decision regarding the null hypothesis?</p>
+
+                <div class="decision-options" id="decisionOptions"></div>
+                <div class="feedback" id="decisionFeedback"></div>
+
+                <div class="study-summary hidden" id="studySummary">
+                    <h3>🎉 Congratulations - Study Complete!</h3>
+                    
+                    <div class="summary-section">
+                        <h4>Key Findings</h4>
+                        <ul id="summaryFindings"></ul>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Clinical Interpretation</h4>
+                        <p>Oral contraceptives combined with a low-sugar diet significantly reduce endometriosis-related symptoms. The treatment reduces persistent symptoms by 53.8% compared to placebo. For every 3 patients treated, 1 additional patient experiences symptom improvement.</p>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Study Conclusions</h4>
+                        <ul>
+                            <li>Results are statistically significant (p &lt; 0.001) and clinically meaningful</li>
+                            <li>The intervention shows promise for endometriosis management</li>
+                        </ul>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Limitations to Consider</h4>
+                        <ul>
+                            <li>Single-center study - may limit generalizability</li>
+                            <li>6-month follow-up - long-term effects unknown</li>
+                            <li>Self-reported outcomes - potential for recall bias</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn btn--primary btn--lg" onclick="restartGame()">Restart Game</button>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn--secondary" onclick="previousStage()">Previous</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
